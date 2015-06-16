@@ -63,7 +63,7 @@ function initialize(){
                         var date = pyear + "." + pmonth + "." + pday + " ";
 
                         //画像の取得
-                        imgsrc = entry.content.match(/(src="(http:|https:)){1}[\S_-]+((\.jpg)|(\.JPG)|(\.gif)|(\.png))"/);
+                        imgsrc = entry.content.match(/(src="(http:|https:)){1}[\S_-]+((\.jpg)|(\.gif))"/);
 
                         //html生成
                         
@@ -122,13 +122,14 @@ function relatedNews(link,category,article_num) {
         
         var related_articles = $("#"+ids[category]+article_num);
         
-        var displayed = related_articles.find("p").map(function(){return $(this).text().replace(/関連記事:/g,"");}).get();
+        var displayed = related_articles.find("a").map(function(){
+            return urlToID($(this).attr("href"));  
+        }).get();
         for (var i = 0; i < links.length; i++) {
             var newlink = links[i];
-            
-            var title = titles[i].trim();
-            
-            if(displayed.indexOf(title)>=0) continue ;
+            var compareLink = urlToID(newlink);
+            var title = titles[i];
+            if(displayed.indexOf(compareLink)>=0) continue ;
             
             related_articles.append('<a href="'+newlink+'" target="_blank"><p><font size="2" color="Blue">'+"関連記事:"+title);
             return;
@@ -136,5 +137,8 @@ function relatedNews(link,category,article_num) {
     });
 }
 
-
+function urlToID(x){
+    var length = x.split("/").length;
+    return x.split("/")[length-2];
+}
 
